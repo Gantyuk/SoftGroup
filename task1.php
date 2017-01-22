@@ -21,16 +21,19 @@
 		$yer = input($_POST['yer']);
 		$budget = input($_POST['budget']);
 		$fname_lname_autor = input($_POST['fname_lname_autor']);
-		
-		$str = $nam . "\t" . $contry . "\t" . $genre . "\t" . $yer . "\t" . $budget  . "\t" . $fname_lname_autor . "\r\n";
-		
-		$f = fopen(filename, 'a');
-		if(is_resource($f)){
-			fputs($f, $str);
-			fclose($f);
+		if ($yer >= 1650 && $yer <= date('Y') && $budget > 0){
+			
+			
+			$str = $nam . "\t" . $contry . "\t" . $genre . "\t" . $yer . "\t" . $budget  . "\t" . $fname_lname_autor . "\r\n";
+			
+			$f = fopen(filename, 'a');
+			if(is_resource($f)){
+				fputs($f, $str);
+				fclose($f);
+			}
+			header('Location: ' . $_SERVER['PHP_SELF']);
+			exit;
 		}
-		header('Location: ' . $_SERVER['PHP_SELF']);
-		exit;
 	}
 	if(file_exists('data.txt')){
 		$lines = file('data.txt');
