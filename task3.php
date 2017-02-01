@@ -4,17 +4,16 @@
 ?>
 	<form method="post" action="">
 		<p>
+		<p>
 			<label>Студія:<br></label>
-			<input type="text" name="studi"  list="st_list">
-			<datalist id="st_list">
-				<?php
-				if ($result = $mysqli->query("SELECT * FROM studions ")) {
-					while ($row = $result->fetch_assoc()) {
-						echo "<option >", $row['Name_studion'], "</option >";
-					}
-				}
-				?>
-			</datalist>
+			<select  name="studion">
+				<option disabled>Виберіть студію</option>
+				<?php if ($result = $mysqli->query("SELECT id,Name_studio FROM studio ")) {
+					while ($row = $result->fetch_assoc()) {?>
+						<option value="<?php echo $row['id']?>"><?php echo $row['Name_studio']?></option>
+					<?php	}
+				}?>
+			</select>
 		<input type="submit" value="Пошук" />
 		<br />
 		</p>
@@ -22,97 +21,44 @@
 	<form method="post" action="">
 		<p>
 			<label>Режисер:<br></label>
-			<input type="text" name="rejis"  list="rej_list">
-			<datalist id="rej_list">
-				<?php
-				if ($result = $mysqli->query("SELECT * FROM regisers ")) {
-					while ($row = $result->fetch_assoc()) {
-						echo "<option >", $row['L_Name'], "</option >";
-					}
-				}
-				?>
-			</datalist>
+			<select  name="directors">
+				<option disabled>Виберіть Режисера</option>
+				<?php if ($result = $mysqli->query("SELECT id,L_Name FROM directors ")) {
+					while ($row = $result->fetch_assoc()) {?>
+						<option value="<?php echo $row['id']?>"><?php echo $row['L_Name']?></option>
+					<?php	}
+				}?>
+			</select>
 			<input type="submit" value="Пошук" />
 			<br />
 		</p>
 	</form>
-<table border = "1">
-	<tr>
-		<th>№</th>
-		<th>Режисер</th>
-		<th>Назва</th>
-		<th>Жанр</th>
-		<th>Тривальсть</th>
-		<th>Рік</th>
-		<th>Бюджет</th>
-		<th>Студія</th>
-		<th>Дата поступлення</th>
-
-	</tr>
-
-	<?php
-	if(isset($_POST['studi']) && !empty($_POST['studi'])) {
-			$studi = $_POST['studi'];
-		if ($studios = $mysqli->query("SELECT * FROM studions WHERE Name_studion = '" .$studi. "'")){
-			while( $row_studions = $studios->fetch_assoc() ){
-				if ($result = $mysqli->query("SELECT * FROM movies WHERE id_Studio =" .$row_studions['id'])){
+<?php
+	if(isset($_POST['studion']) && !empty($_POST['studion'])) {
+include("cap_plates.php");
+	$studion = $_POST['studion'];
+		$request1 = $request . " WHERE s.id = " . $studion ;
+			if ($result = $mysqli->query($request1)){
 					while( $row = $result->fetch_assoc() ){
-						if ($name = $mysqli->query("SELECT * FROM regisers WHERE id = ".$row['id_S_L_Name'])){
-							while( $row_regiser = $name->fetch_assoc() ){
-								if ($janre = $mysqli->query("SELECT * FROM janres WHERE id = ".$row['id_Janre'])){
-									while( $row_janre = $janre->fetch_assoc() ){
-										echo "<tr><td>" , $row['id'] , "</td> 
-				<td>" , $row_regiser['L_Name'] , ' ', $row_regiser['S_Name'] , "</td>
-				<td>" , $row['Name'] , "</td>
-				<td>" , $row_janre['janre'] , "</td>
-				<td>" , $row['Duration'] , "</td>
-				<td>" , $row['Yer'] , "</td>
-				<td>" , $row['Biudjet'] , "</td>
-				<td>" , $row_studions['Name_studion'] , "</td>
-				<td>" , $row['Date'] , "</td>
-		
-	</tr>";
-									}
-								}
-							}
-						}
+						?>
+						<?php include ("plate.php");?>
+						<?php
 					}
 				}
-			}
-		}
-		echo '</table>';
 	}
-	if(isset($_POST['rejis']) && !empty($_POST['rejis'])) {
-		$regis = $_POST['rejis'];
-		if ($name = $mysqli->query("SELECT * FROM regisers WHERE L_Name ='" . $regis . "'")) {
-			while ($row_regiser = $name->fetch_assoc()) {
-				if ($result = $mysqli->query("SELECT * FROM movies WHERE id_S_L_Name = '" . $row_regiser['id'] . "'")) {
-					while ($row = $result->fetch_assoc()) {
-						if ($janre = $mysqli->query("SELECT * FROM janres WHERE id = " . $row['id_Janre'])) {
-							while ($row_janre = $janre->fetch_assoc()) {
-								if ($studios = $mysqli->query("SELECT * FROM studions WHERE id = " . $row['id_Studio'])) {
-									while ($row_studions = $studios->fetch_assoc()) {
-										echo "<tr><td>", $row['id'], "</td> 
-				<td>", $row_regiser['L_Name'], ' ', $row_regiser['S_Name'], "</td>
-				<td>", $row['Name'], "</td>
-				<td>", $row_janre['janre'], "</td>
-				<td>", $row['Duration'], "</td>
-				<td>", $row['Yer'], "</td>
-				<td>", $row['Biudjet'], "</td>
-				<td>", $row_studions['Name_studion'], "</td>
-				<td>", $row['Date'], "</td>
-		
-	</tr>";
-									}
-								}
-							}
-						}
+	if(isset($_POST['directors']) && !empty($_POST['directors'])) {
+include("cap_plates.php");
+	$directors = $_POST['directors'];
+ 	$request2 = $request . " WHERE d.id = ". $directors ;
+			if ($result = $mysqli->query($request2)){
+					while( $row = $result->fetch_assoc() ){
+						?>
+						<?php include ("plate.php");?>
+						<?php
 					}
 				}
-			}
-		}
-		echo '</table>';
-
-	}
+	}?>
+</table>
+<?php
 	include("footer.php");
 ?>
