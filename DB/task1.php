@@ -1,27 +1,40 @@
 <?php
 	include("header.php");
-	include("DB/db_conect.php");
-	require_once ("M/directors.php");
-	require_once ("M/conect_db.php");
-	$mysqli = new Conect_db();
+	include("db_conect.php");
 if(
 	isset($_POST['s_name']) && !empty($_POST['s_name']) &&
 	isset($_POST['l_name']) && !empty($_POST['l_name']) &&
 	isset($_POST['y_birth']) && !empty($_POST['y_birth']) && is_numeric($_POST['y_birth']) &&
 	isset($_POST['countries']) && !empty($_POST['countries'])
 ){
-	$directors = new Directors();
-	$directors->setSName(input($_POST['s_name']));
-	$directors->setLName(input($_POST['l_name']));
-	$directors->setYBirth($_POST['y_birth']);
-	$directors->setYDeath($_POST['y_death']);
-	$directors->setIdContries($_POST['countries']);
-	if ($directors->getYBirth() >= 1400 && $directors->getYBirth() <= date('Y')){
-		$directors->Add($mysqli->getMysqli());
+	function input($data) {
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
+	}
+	$s_name = input($_POST['s_name']);
+	$l_name = input($_POST['l_name']);
+	$y_birth = $_POST['y_birth'];
+	$y_death = $_POST['y_death'];
+	$countries = $_POST['countries'];
+	if ($y_birth >= 1400 && $y_birth <= date('Y')){
+		$mysqli->query("
+			INSERT INTO
+				directors (S_Name, L_Name, Y_Birth, Y_Death, id_contries)
+			VALUES
+				('$s_name','$l_name','$y_birth','$y_death','$countries')
+		");
 	}
 }
-if(	isset($_POST['num']) && !empty($_POST['num']) && is_numeric($_POST['num'])){
-	$mysqli->DeletId($_POST['num'],"directors");
+if(
+	isset($_POST['num']) && !empty($_POST['num']) && is_numeric($_POST['num'])
+){
+	$mysqli->query("
+						DELETE FROM directors
+						WHERE id = " . $_POST['num']. ";"
+	);
+
 }
 ?>
 	<table border="1" align="center">
@@ -36,7 +49,13 @@ if(	isset($_POST['num']) && !empty($_POST['num']) && is_numeric($_POST['num'])){
 	</tr>
 
 <?php
-foreach( $mysqli->Display_Directors() as $row){?>
+
+if ($result = $mysqli->query(
+	"SELECT d.id, d.S_Name, d.L_Name, d.Y_Birth, d.Y_Death, c.countries AS c_countries      
+					FROM directors d
+					JOIN countries c ON d.id_contries = c.id"
+	)) {
+	while ($row = $result->fetch_assoc()) {?>
 	<tr>
 		<td><?php echo $row['id']?></td>
 		<td><?php echo $row['S_Name']?></td>
@@ -45,7 +64,9 @@ foreach( $mysqli->Display_Directors() as $row){?>
 		<td><?php echo $row['Y_Death']?></td>
 		<td><?php echo $row['c_countries']?></td>
 	</tr>
-<?php } ?>
+<?php }
+}
+?>
 	</table>
 <center>
 	<h1>Додати Режисера:</h1>
@@ -66,9 +87,11 @@ foreach( $mysqli->Display_Directors() as $row){?>
 			<label>Громадянство:<br></label>
 			<select  name="countries">
 				<option disabled>Виберіть Країну</option>
-				<?php foreach( $mysqli->Select("id,countries" , "countries") as $row) { ?>
-					<option value="<?php echo $row['id']?>"><?php echo $row['countries']?></option>
-				<?php } ?>
+				<?php if ($result = $mysqli->query("SELECT * FROM countries ")) {
+					while ($row = $result->fetch_assoc()) {?>
+						<option value="<?php echo $row['id']?>"><?php echo $row['countries']?></option>
+					<?php	}
+				}?>
 			</select>
 		</p>
 		<input type="submit" value="Додати!" />
@@ -88,11 +111,18 @@ foreach( $mysqli->Display_Directors() as $row){?>
 	</form>
 	<?php
 	if(isset($_POST['name_directors']) && !empty($_POST['name_directors'])) {
-		include("cap_plates.php");
-		foreach( $mysqli->Display_Muvies_Search("d.S_Name", $_POST['name_directors']) as $row){
-			include ("plate.php");
+	$name_directors = $_POST['name_directors'];
+	include("cap_plates.php");
+		$request = $request . " WHERE d.S_Name LIKE '%". $name_directors ."%'";
+		if ($result = $mysqli->query($request)){
+			while( $row = $result->fetch_assoc() ){
+				?>
+				<?php include ("plate.php");?>
+				<?php
+			}
 		}
-	}?>
+		}
+		?>
 	</table>
 </center>	
 <?php

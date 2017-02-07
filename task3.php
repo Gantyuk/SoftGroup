@@ -1,6 +1,7 @@
 <?php
 	include("header.php");
-	include("DB/db_conect.php");
+	require_once ("M/conect_db.php");
+	$mysqli = new Conect_db()
 ?>
 	<form method="post" action="">
 		<p>
@@ -8,11 +9,9 @@
 			<label>Студія:<br></label>
 			<select  name="studion">
 				<option disabled>Виберіть студію</option>
-				<?php if ($result = $mysqli->query("SELECT id,Name_studio FROM studio ")) {
-					while ($row = $result->fetch_assoc()) {?>
-						<option value="<?php echo $row['id']?>"><?php echo $row['Name_studio']?></option>
-					<?php	}
-				}?>
+				<?php foreach( $mysqli->Select("id,Name_studio" , "studio") as $row) { ?>
+					<option value="<?php echo $row['id']?>"><?php echo $row['Name_studio']?></option>
+				<?php } ?>
 			</select>
 		<input type="submit" value="Пошук" />
 		<br />
@@ -23,11 +22,9 @@
 			<label>Режисер:<br></label>
 			<select  name="directors">
 				<option disabled>Виберіть Режисера</option>
-				<?php if ($result = $mysqli->query("SELECT id,L_Name FROM directors ")) {
-					while ($row = $result->fetch_assoc()) {?>
-						<option value="<?php echo $row['id']?>"><?php echo $row['L_Name']?></option>
-					<?php	}
-				}?>
+				<?php foreach( $mysqli->Select("id,L_Name" ,"directors") as $row) {?>
+					<option value="<?php echo $row['id']?>"><?php echo $row['L_Name']?></option>
+				<?php } ?>
 			</select>
 			<input type="submit" value="Пошук" />
 			<br />
@@ -35,30 +32,16 @@
 	</form>
 <?php
 	if(isset($_POST['studion']) && !empty($_POST['studion'])) {
-include("cap_plates.php");
-	$studion = $_POST['studion'];
-		$request1 = $request . " WHERE s.id = " . $studion ;
-			if ($result = $mysqli->query($request1)){
-					while( $row = $result->fetch_assoc() ){
-						?>
-						<?php include ("plate.php");?>
-						<?php
-					}
-				}
+		include("cap_plates.php");
+		foreach ($mysqli->Display_Muvies_Search("s.id", $_POST['studion']) as $row) {
+			include("plate.php");
+		}
 	}
 	if(isset($_POST['directors']) && !empty($_POST['directors'])) {
-include("cap_plates.php");
-	$directors = $_POST['directors'];
- 	$request2 = $request . " WHERE d.id = ". $directors ;
-			if ($result = $mysqli->query($request2)){
-					while( $row = $result->fetch_assoc() ){
-						?>
-						<?php include ("plate.php");?>
-						<?php
-					}
-				}
+		include("cap_plates.php");
+		foreach ($mysqli->Display_Muvies_Search("d.id", $_POST['directors']) as $row) {
+			include("plate.php");
+		}
 	}?>
 </table>
-<?php
-	include("footer.php");
-?>
+<?php	include("footer.php");?>

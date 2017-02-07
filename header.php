@@ -1,9 +1,17 @@
+<?php
+	function input($data) {
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
+	}
+?>
 <title>SoftGroup</title>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
 	<div class="header">
-		<img id="logo" src="img/Logo.png"/>
+		<img id="logo" src="img/Logo.png" width="189" height="60"/>
 		<div class="menu_head">
 			<a href="index.php">Головна</a> 
 			<a href="autor.php">Автор</a>
