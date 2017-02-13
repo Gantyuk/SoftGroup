@@ -1,0 +1,60 @@
+.header {
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:10px;
+    width:1000px;
+    height:100px;
+    border:1px solid #000000;
+    background: #009966;
+	background-image: url(img/1.gif);
+    }
+.pages { 
+    margin-left:auto; 
+    margin-right:auto; 
+    width:1000px;
+    }
+#logo { 
+    margin-left:20px; 
+    margin-top:10px;
+	width:150px;	
+    }
+.text_head {
+	margin-top:-30px;
+	margin-left:400px;	
+	}
+.menu_head{
+	margin-top:-60px;
+	margin-left:800px;
+	}
+.content {
+    width:806px;
+    height:auto;
+    border:1px solid #000000;
+    background: #999999;
+    float:left;
+	text-indent: 1.5em; 
+    text-align: justify;
+    }
+p{
+	text-indent: 1.5em;	
+	}	
+.sidebar {
+	margin-right:10px;
+    width:180px;
+    height:auto;
+    border:1px solid #000000;
+    background: #FF9900;
+    float:left;
+    }
+.foot {
+    clear:both;
+    }
+.footer {
+    margin-top:10px;
+    margin-left:auto;
+    margin-right:auto;
+    width:1000px;
+    height:auto;
+    border:1px solid #000000;
+    background: #333399;
+    }

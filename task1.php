@@ -1,6 +1,5 @@
 <?php
 	include("header.php");
-	include("DB/db_conect.php");
 	require_once ("M/directors.php");
 	require_once ("M/conect_db.php");
 	$mysqli = new Conect_db();
