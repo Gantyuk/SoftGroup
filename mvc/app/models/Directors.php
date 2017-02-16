@@ -3,18 +3,18 @@ namespace app\models;
 
 use vender\core\DB;
 
-class Directors  extends DB
+class Directors extends DB
 {
     private $_id;
     private $_S_Name;
     private $_L_Name;
     private $_Y_Birth;
-    private $_Y_Death;
+    private $_Y_Death = "NULL";
     private $_id_contries;
 
     public function __construct()
     {
-       $this->_mysql = DB::instanse();
+        $this->_mysql = DB::instanse();
     }
 
     public function Add()
@@ -86,14 +86,15 @@ class Directors  extends DB
     {
         $this->_Y_Death = $Y_Death;
     }
+
     public function Display_Directors()
     {
-        $result =  $this->_mysql->Query("SELECT d.id, d.S_Name, d.L_Name, d.Y_Birth, d.Y_Death, c.countries AS c_countries      
+        $result = $this->_mysql->Query("SELECT d.id, d.S_Name, d.L_Name, d.Y_Birth, d.Y_Death, c.countries AS c_countries      
 					FROM directors d
 					JOIN countries c ON d.id_contries = c.id"
         );
         $directors = array();
-        while( $row = $result->fetch_assoc() ){
+        while ($row = $result->fetch_assoc()) {
             $directors[] = $row;
         }
         return $directors;

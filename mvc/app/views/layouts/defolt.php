@@ -3,13 +3,14 @@
 </head>
 <body>
 <div class="header">
-    <img id="logo" src="/mvc/images/Logo.png" width="189" height="60">
+    <img id="logo" src="/mvc/images/Logo.PNG" width="189" height="60">
     <div class="menu_head">
         <a href="/mvc/main/index">Головна</a>
         <a href="/mvc/main/autor">Автор</a>
         <a target="_blank" href="http://www.soft-group.com">SoftGroup </a>
     </div>
-    <div class="text_head"><h2>SoftGroup </h2> <h3>Фільми</h3></div>
+    <div class="text_head"><h2>SoftGroup </h2>
+        <h3>Фільми</h3></div>
 </div>
 <div class="pages">
     <div class="sidebar">
@@ -20,7 +21,7 @@
         </ul>
     </div>
     <div class="content">
-    <?php echo $contend;?>
+        <?php echo $contend; ?>
     </div>
     <div class="foot">
     </div>

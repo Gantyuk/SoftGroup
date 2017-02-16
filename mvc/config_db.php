@@ -1,9 +1,9 @@
 <?php
-    return [
-        'host' => 'localhost',
-        'log' => 'root',
-        'paswd' => '',
-        'table' => 'vidioteka'
+return [
+    'host' => 'localhost',
+    'users' => 'root',
+    'paswd' => '',
+    'DB' => 'vidioteka'
 
-    ];
+];
 ?>

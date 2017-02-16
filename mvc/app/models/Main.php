@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Vgant
- * Date: 10.02.2017
- * Time: 21:35
- */
 
 namespace app\models;
 
 use vender\core\DB;
+
 class Main extends DB
 {
     protected $_id;
@@ -19,30 +14,30 @@ class Main extends DB
     protected $_year;
     protected $_Biudjet;
     protected $_id_Studio;
-    protected $_Date; 
-    
+    protected $_Date;
+
     protected $_muvi_sql = "SELECT m.id, m.Name, d.S_Name  AS d_S_name, d.L_Name AS d_L_name , g.genres AS g_genres, m.Duration, m.year, m.Biudjet, s.Name_studio AS s_Name_studio, m.Date       
 					FROM movies m
 					INNER JOIN directors d  ON m.id_directors = d.id
                     INNER JOIN genres g ON m.id_genres = g.id
                     INNER JOIN studio s ON m.id_Studio = s.id  ";
 
-    
 
     public function __construct()
     {
         $this->_mysql = DB::instanse();
     }
+
     public function Display_Muvies()
     {
         $result = $this->_mysql->Query($this->_muvi_sql);
         $movies = array();
-        while( $row = $result->fetch_assoc() ){
+        while ($row = $result->fetch_assoc()) {
             $movies[] = $row;
         }
         return $movies;
     }
-    
+
     public function getBiudjet()
     {
         return $this->_Biudjet;
@@ -135,24 +130,25 @@ class Main extends DB
 
     public function Add()
     {
-        $this->_mysql->Query( "
+        $this->_mysql->Query("
 			INSERT INTO
 				movies (id_directors, Name, id_genres, Duration, year, Biudjet, id_Studio, Date)
 			VALUES
 				(" . $this->getIdDirectors() . ", '" . $this->getName() . "', " . $this->getIdGenres() . ", " . $this->getDuration() . ",
-				" . $this->getYear() . ", " . $this->getBiudjet() . ", " . $this->getIdStudio() . ", " . $this->getDate() . ")"	);
+				" . $this->getYear() . ", " . $this->getBiudjet() . ", " . $this->getIdStudio() . ", '" . $this->getDate() . "')");
         return $this->getId();
     }
-    
-    public function order($by){
-        return $this->_mysql->OrderBy($this->_muvi_sql,$by);
+
+    public function order($by)
+    {
+        return $this->_mysql->OrderBy($this->_muvi_sql, $by);
     }
 
     public function Search($table, $value)
     {
-        $result = $this->_mysql->Query($this->_muvi_sql . " WHERE " . $table . "=". $value . ";");
+        $result = $this->_mysql->Query($this->_muvi_sql . " WHERE " . $table . "=" . $value . ";");
         $movies = array();
-        while( $row = $result->fetch_assoc() ){
+        while ($row = $result->fetch_assoc()) {
             $movies[] = $row;
         }
         return $movies;
@@ -160,11 +156,13 @@ class Main extends DB
 
     public function SearchLike($table, $value)
     {
-        $result = $this->_mysql->Query($this->_muvi_sql . " WHERE " . $table . " LIKE '%". $value ."%';");
+        $result = $this->_mysql->Query($this->_muvi_sql . " WHERE " . $table . " LIKE '%" . $value . "%';");
         $movies = array();
-        while( $row = $result->fetch_assoc() ){
+        while ($row = $result->fetch_assoc()) {
             $movies[] = $row;
         }
         return $movies;
     }
 }
+
+?>
